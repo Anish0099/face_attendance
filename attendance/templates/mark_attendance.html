@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+{% block title %}Mark Attendance{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-sm my-4">
+        <div class="card-body">
+          <h2 class="text-center my-4">Mark Attendance</h2>
+          <form method="post" enctype="multipart/form-data" id="attendance-form">
+            {% csrf_token %}
+            <div class="mb-3 text-center">
+              <label for="photo" class="form-label">Capture Photo</label>
+              <div class="position-relative">
+                <!-- Video container -->
+                <video id="video" class="rounded border" style="width: 100%; height: auto;" autoplay></video>
+                <canvas id="canvas" style="display: none; position: absolute; top: 0; left: 0;"></canvas>
+                <img id="captured-photo" class="rounded border" style="display: none; width: 100%; height: auto;" alt="Captured Photo" />
+              </div>
+              <button type="button" class="btn btn-secondary mt-3" id="capture">
+                Capture Photo
+              </button>
+            </div>
+            <input type="hidden" id="photo" name="photo" />
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-primary btn-block">Submit</button>
+            </div>
+          </form>
+          <p class="text-center mt-3">
+            Have an account? <a href="{% url 'login' %}">Login here</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const video = document.getElementById("video");
+  const canvas = document.getElementById("canvas");
+  const captureButton = document.getElementById("capture");
+  const photoInput = document.getElementById("photo");
+  const capturedPhoto = document.getElementById("captured-photo");
+
+  // Access the webcam
+  navigator.mediaDevices
+    .getUserMedia({ video: true })
+    .then((stream) => {
+      video.srcObject = stream;
+    })
+    .catch((err) => {
+      console.error("Error accessing webcam:", err);
+    });
+
+  // Capture photo
+  captureButton.addEventListener("click", () => {
+    // Hide the captured image if it's visible
+    capturedPhoto.style.display = "none"; 
+
+    // Show the canvas to capture the photo
+    canvas.style.display = "block"; 
+
+    const context = canvas.getContext("2d");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Convert the image to Base64
+    const imageData = canvas.toDataURL("image/png");
+    photoInput.value = imageData;
+
+    // Display the captured image from the canvas
+    capturedPhoto.src = imageData;
+    capturedPhoto.style.display = "block"; 
+
+    // Hide the canvas after capturing
+    canvas.style.display = "none";
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "layout.html" %} {% block title %} Student List {% endblock %}
+{%block content %}
+<div class="container mt-4 row gap-3">
+  {% for user in users %} {% if user.email %}
+  <div class="card" style="width: 18rem">
+    <img
+      src="{{ user.userprofile.photo.url }}"
+      class="card-img-top img-fixed"
+      alt="..."
+    />
+    <div class="card-body">
+      <h5 class="card-title">{{user.username}}</h5>
+      <p class="card-text">{{user.email}}</p>
+      <a href="{% url 'attendance_records' %}" class="btn btn-primary">Go to Attendance list</a>
+    </div>
+  </div>
+
+  {% endif %} {% empty %}
+  <p>No users found.</p>
+  {% endfor %}
+</div>
+{% endblock %}

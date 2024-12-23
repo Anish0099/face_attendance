@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block title %}Attendance Failure{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6 col-lg-4">
+    <div class="card shadow-sm my-5">
+      <div class="card-body text-center">
+        <h2 class="text-center my-4">Attendance Not Marked</h2>
+        <p class="text-danger">Your attendance could not be marked. Please try again.</p>
+        <a href="{% url 'mark_attendance' %}" class="btn btn-primary">Try Again</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
